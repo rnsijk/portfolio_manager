@@ -25,7 +25,7 @@ export default {
   computed: {
     bucketList() {
       return this.$store.getters.buckets;
-    }
+    },
   },
 };
 </script>

@@ -26,6 +26,6 @@
 <script>
 export default {
   name: 'Bucket',
-  props: ['info']
+  props: ['info'],
 };
 </script>

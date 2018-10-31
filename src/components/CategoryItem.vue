@@ -11,19 +11,29 @@
     </a></div>
     <div class="col-2 text-center">{{info.weight}}</div>
     <div class="col-2">
-      <Spinner />
+      <Spinner v-bind:value="info.editWeight" v-bind:onChange="onChange"/>
     </div>
   </div>
 </template>
 
 <script>
-import Spinner from '@/components/Spinner.vue'
+import Spinner from '@/components/Spinner.vue';
+
 export default {
   name: 'CategoryItem',
-  props:['info'],
+  props: ['info'],
   components: {
     Spinner,
   },
-}
+  methods: {
+    onChange(val) {
+      this.$store.dispatch({
+        type: 'weightChanged',
+        instrument: this.$props.info.instrument,
+        weight: val
+      });
+    }
+  }
+};
 </script>
 

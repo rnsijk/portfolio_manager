@@ -10,19 +10,50 @@ export default new Vuex.Store({
     categories: [
       'equity',
       'bond',
-      'cash'
-    ]
+      'cash',
+    ],
+    constituents: null,
   },
+
   mutations: {
-
-  },
-  actions: {
-
-  },
-  getters: {
-    buckets: state => {
-      return state.buckets.map(({id, name, volatility, mean_return}) => ({id, name, volatility, mean_return}));
+    setConstituent: (state, payload) => {
+      state.constituents = payload;
     },
-    constituentsList: state => id => ( state.buckets.find( bucket => bucket.id === id ).constituents ),
-  }
+    setCurrentBucket: (state, payload) => {
+      state.currentBucket = payload;
+    },
+    updateWeight: (state, {id, weight}) => {
+      state.constituents.map( constituent => {
+        if(constituent.instrument.id === id) {
+          constituent.editWeight = weight;
+          constituent.changed = true;
+        }
+      });
+    }
+  },
+
+  actions: {
+    loadConstituents: ({ commit, state }, payload) => {
+      const {id, name, volatility, mean_return, constituents} = state.buckets.find(bucket => bucket.id === payload.id);
+      commit('setConstituent', constituents);
+      commit('setCurrentBucket', { id, name, volatility, mean_return });
+    },
+
+    weightChanged: ({commit, state}, {weight, instrument}) => {
+      commit('updateWeight', {
+        id: instrument.id,
+        weight
+      })
+    }
+  },
+
+  getters: {
+    buckets: state => state.buckets.map(({
+      id, name, volatility, mean_return,
+    }) => ({
+      id, name, volatility, mean_return,
+    })),
+    constituentsList: state => (state.constituents),
+    currentBucket: state => (state.currentBucket)
+  },
 });
